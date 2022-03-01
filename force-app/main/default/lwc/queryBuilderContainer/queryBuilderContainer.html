@@ -1,0 +1,14 @@
+
+<template>
+    <div class="slds-box slds-theme_default slds-var-p-around_small">
+        <lightning-combobox name="objectCombobox" label="Select Object to Query" placeholder="Object to query...." options={objectOptions} onchange={handleObjectChange}></lightning-combobox>
+
+        <template if:true={displayQueryBuilder}>
+            <br/>
+            <lightning-dual-listbox name="fields" label="Select Fields to Include in Query" source-label="Available Fields" selected-label="Selected Fields" options={fieldOptions} min="1" onchange={handleListboxChange}></lightning-dual-listbox>
+            <br/>
+
+            <lightning-button label="Execute Query" onclick={handleExecuteQuery}></lightning-button>
+        </template>
+    </div>
+</template>
