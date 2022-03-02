@@ -34,16 +34,19 @@ const OBJECT_OPTIONS =  [
     }
 ];
 
-// pretty up available fields
 // only display accessible objects
-// pretty table display for query results
+// include functionality for creating a where clause
 
 export default class QueryBuilderContainer extends LightningElement {
     displayQueryBuilder;
+    displayTable;
     fieldOptions;
+    fieldsToQuery = [];
     objectName;
     objectOptions;
-    queryFields = [];
+    queryableFields;
+    tableData;
+    tableColumns;
 
     connectedCallback() {
         this.objectOptions = OBJECT_OPTIONS;
@@ -53,13 +56,13 @@ export default class QueryBuilderContainer extends LightningElement {
         this.objectName = event.detail.value;
 
         try {
-            let queryableFields = await getQueryableFields({objectName: this.objectName});
-    
+            this.queryableFields = await getQueryableFields({objectName: this.objectName});
+            
             this.fieldOptions = [];
     
-            for(let field of queryableFields) {
+            for(let field in this.queryableFields) {
                 this.fieldOptions.push({
-                    label: field,
+                    label: this.queryableFields[field],
                     value: field
                 });
             }
@@ -71,17 +74,27 @@ export default class QueryBuilderContainer extends LightningElement {
     }
 
     handleListboxChange(event) {
-        this.queryFields = event.detail.value;
+        this.fieldsToQuery = event.detail;
     }
 
-    async handleExecuteQuery() {
-        if(this.queryFields.length > 0) {
-            let queryString = 'SELECT ' + this.queryFields.join(', ') + ' FROM ' + this.objectName;
+    async handleExecuteQuery(event) {
+        let whereClause = event.detail;
+
+        if(this.fieldsToQuery.length > 0) {
+            let queryString = 'SELECT ' + this.fieldsToQuery.join(', ') + ' FROM ' + this.objectName;
+
+            if(whereClause) {
+                queryString += ' WHERE '  + whereClause;
+            }
+
+            this.populateTableColumns();
 
             try {
                 let queryResults = await getQueryResults({queryString: queryString});
-    
-                console.log(queryResults);
+
+                this.tableData = queryResults;
+                this.displayTable = true;
+
             } catch(err) {
                 console.error(err);
             }
@@ -93,6 +106,17 @@ export default class QueryBuilderContainer extends LightningElement {
             });
 
             this.dispatchEvent(toastEvent);
+        }
+    }
+
+    populateTableColumns() {
+        this.tableColumns = [];
+
+        for(let field of this.fieldsToQuery) {
+            this.tableColumns.push({
+                label: this.queryableFields[field],
+                fieldName: field
+            });
         }
     }
 }

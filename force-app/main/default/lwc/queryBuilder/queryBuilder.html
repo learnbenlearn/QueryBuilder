@@ -1,0 +1,15 @@
+<template>
+    <br/>
+    <lightning-dual-listbox name="fields" label="Select Fields to Include in Query" source-label="Available Fields" selected-label="Selected Fields" options={listboxOptions} min="1" onchange={handleListboxChange}></lightning-dual-listbox>
+    <br/>
+
+    <lightning-input type="toggle" onchange={handleToggleChange} label="Include Filters (WHERE Clause)"></lightning-input>
+
+    <template if:true={displayInputText}>
+        <br/>
+        <lightning-input class="whereClauseInput" label="Enter filters using field expression syntax (without the WHERE clause)"></lightning-input>
+        <br/>
+    </template>
+
+    <lightning-button label={buttonLabel} onclick={handleClick}></lightning-button>
+</template>

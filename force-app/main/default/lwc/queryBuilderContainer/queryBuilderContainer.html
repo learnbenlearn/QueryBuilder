@@ -4,11 +4,15 @@
         <lightning-combobox name="objectCombobox" label="Select Object to Query" placeholder="Object to query...." options={objectOptions} onchange={handleObjectChange}></lightning-combobox>
 
         <template if:true={displayQueryBuilder}>
-            <br/>
-            <lightning-dual-listbox name="fields" label="Select Fields to Include in Query" source-label="Available Fields" selected-label="Selected Fields" options={fieldOptions} min="1" onchange={handleListboxChange}></lightning-dual-listbox>
-            <br/>
+            <c-query-builder button-label="Execute Query" listbox-options={fieldOptions} onlistboxchange={handleListboxChange} onlistboxclick={handleExecuteQuery}></c-query-builder>
+        </template>
 
-            <lightning-button label="Execute Query" onclick={handleExecuteQuery}></lightning-button>
+        <template if:true={displayTable}>
+            <br/>
+            <br/>
+            <div style="height:300px">
+                <c-query-results-table table-data={tableData} table-columns={tableColumns}></c-query-results-table>
+            </div>
         </template>
     </div>
 </template>
