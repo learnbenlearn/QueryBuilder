@@ -2,7 +2,7 @@
  * @description       : 
  * @author            : Ben Learn
  * @group             : 
- * @last modified on  : 03-02-2022
+ * @last modified on  : 03-03-2022
  * @last modified by  : Ben Learn
 **/
 public with sharing class QueryBuilderService {
@@ -24,7 +24,12 @@ public with sharing class QueryBuilderService {
     }
 
     @AuraEnabled(cacheable=true)
-    public static List<sObject> getQueryResults(String queryString) {
+    public static List<sObject> getQueryResults(String queryString, String whereClause) {
+        if(whereClause != '') {
+            queryString += ' WHERE ' + whereClause;
+        }
+
+        System.debug(queryString);
         return Database.query(queryString);
     }
 }

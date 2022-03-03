@@ -35,7 +35,7 @@ const OBJECT_OPTIONS =  [
 ];
 
 // only display accessible objects
-// include functionality for creating a where clause
+// include functionality for creating a secure where clause
 
 export default class QueryBuilderContainer extends LightningElement {
     displayQueryBuilder;
@@ -83,14 +83,10 @@ export default class QueryBuilderContainer extends LightningElement {
         if(this.fieldsToQuery.length > 0) {
             let queryString = 'SELECT ' + this.fieldsToQuery.join(', ') + ' FROM ' + this.objectName;
 
-            if(whereClause) {
-                queryString += ' WHERE '  + whereClause;
-            }
-
             this.populateTableColumns();
 
             try {
-                let queryResults = await getQueryResults({queryString: queryString});
+                let queryResults = await getQueryResults({queryString: queryString, whereClause: whereClause});
 
                 this.tableData = queryResults;
                 this.displayTable = true;

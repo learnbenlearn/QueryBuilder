@@ -14,9 +14,17 @@ export default class QueryBuilder extends LightningElement {
     }
 
     handleClick() {
-        const listboxClick = new CustomEvent('listboxclick', {
-            detail: this.template.querySelector('lightning-input.whereClauseInput').value
-        });
+        let listboxClick;
+
+        if(this.displayInputText) {
+            listboxClick = new CustomEvent('listboxclick', {
+                detail: this.template.querySelector('lightning-input.whereClauseInput').value
+            });
+        } else {
+            listboxClick = new CustomEvent('listboxclick', {
+                detail: ''
+            });
+        }
 
         this.dispatchEvent(listboxClick);
     }
